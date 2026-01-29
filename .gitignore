@@ -1,0 +1,13 @@
+IceCode
+Results/
+build/
+CMakeFiles/
+cmake_install.cmake
+CMakeCache.txt
+Makefile
+*.asv
+*.mp4
+*.h5
+*.hdf5
+*.mat
+.vscode/

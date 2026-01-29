@@ -1,0 +1,266 @@
+{
+    "Restart":{
+        "Restartable": false,
+        "Saveloc": "Results/Backup",
+        "SaveFrequency": 100,
+        "BackUps": 3
+    },
+    "Logs":{
+        "InfoLevel": 2
+    },
+    "mesh":{
+        "dim":2,
+        "file":"TestCases/IceCliffs/MeshGen/IceCliff_L1000m_H200m_dx1m_56c.h5",
+        "ipcount1D": 3
+    },
+    "properties":{
+        "PhaseField":{
+            "DamFunction": "Quadratic",
+            "DensityDamage": "Step2",
+            "GravityDamage": "Step2",
+            "ViscoDriving": "None",
+            "ViscoDrivingFactor": 0.0,
+            "ConsistentEnergy": false,
+            "ConsistentDegradation": false,
+            "DistributionFunction": "HO_Linear2",
+            "k0": 1.0e-12
+        },
+        "Ice":{
+            "TemperatureDependent":{
+                "TemperatureDependent": true,
+                "TRef": 273.15,
+                "TOffset": 273.15,
+                "QCreep": 150.0e3,
+                "ft0": 0.2e6,
+                "_ftdeg":2.0e4,
+                "ftdeg":4.0e4,
+                "sydeg": 0.5e6
+            },
+            "SolidProperties":{
+                "Rheology": "DamViscoElasticPlastic",
+                "Density": 910,
+                "Young": 5.0e9,
+                "Poisson": 0.35,
+                "G_coss": 1.8e9,
+                "l_coss": 2.5,
+                "Damping": 1.0e6,
+                "A": 1.0e-24,
+                "PhiViscLim": 0.9,
+                "n": 3.0,
+                "sy": 1.5e6,
+                "_sy": 9.5e6,
+                "hardening": -0.9,
+                "hard_eRef": 4.0e-4,
+                "pl_visc": 1.0e3
+            },
+            "FractureProperties":{
+                "Split": "SpecStress",
+                "l": 2.5,
+                "Gc": 4000.0e-3,
+                "Viscosity": 1.0e-3
+            },
+            "ThermalProperties":{
+                "ThermalConductivity": 2.0,
+                "HeatCapacity": 2.1e3,
+                "LatentHeat": 3.3e5
+            }
+        },
+        "Water":{
+            "SolidProperties":{
+                "Density": 1000
+            },
+            "ThermalProperties":{
+                "HeatCapacity": 4.2e3,
+                "ThermalConductivity": 0.6
+            }
+        },
+        "TimeDiscretisation":{
+            "_Scheme": "BDF2",
+            "Scheme": "Newmark",
+            "beta": 0.4,
+            "gamma": 0.75 
+        }
+    },
+    "Dofs":{
+        "DofNames": ["ux","uy", "oz","phase","lMult_pf","lMult_pf2","T","poros"],
+        "DofStep":  [0,   0,    0,    1,      1,  1,  2, 3]
+    },
+    "nonlinSolver":{
+        "BFGS": [false, false, false, false],
+        "BFGS_Reset": 20,
+        "max_it": 40,
+        "max_outer_it": 1,
+        "convCrit": [1.0e-5, 1.0e10, 1.0e-5],
+        "tiny": [1.0e-6, 1.0e10, 1.0e-12],
+        "linesearch": true,
+        "linesearchLims": [0.25, 1.0],
+        "LinSolver":{
+            "Type": "GMRES",
+            "IOptionIdx": [],
+            "IOptionVals": []
+        },
+        "Initialization":{
+            "Type": "Glacier",
+            "InteriorGroup": "internal",
+            "InteriorGroup_T": "internal",
+            "InteriorGroup_phase": "internal",
+            "Material": "Ice",
+            "HFirn": 50,
+            "TSurf": -1.0,
+            "TBase": -1.0,
+            "poros_ice": 1e-3,
+            "poros_firn": 0.5,
+            "InitDepth": -200.0
+        }
+    },
+    "TimeSolver":{
+        "dtSteps": [7200.0, 60.0],
+        "tSteps": [-200000, 0],
+        "DynamicDT": true,
+        "TimeDataRefine": "PhaseField1/dL_crack",
+        "TimeDataRefineFactor": 5.0,
+        "t0": -180000,
+        "tmax": 600.0,
+        "outputN": 10
+    },
+    "Visualisation":{
+        "Plots": ["ux","uy","T","PhaseField","plot2","plot3"],
+        "ElementGroup_u": "internal",
+        "ux":{
+            "Type": "Surf_2D",
+            "Dof": "ux",
+            "ElementGroup": "internal",
+            "Deformed": true,
+            "DeformedScale": 1.0,
+            "Frequency": "step",
+            "ShowMesh": false
+        },
+        "uy":{
+            "Type": "Surf_2D",
+            "Dof": "uy",
+            "ElementGroup": "internal",
+            "Deformed": false,
+            "DeformedScale": 1e2,
+            "Frequency": "step",
+            "ShowMesh": false
+        },
+        "oz":{
+            "Type": "Surf_2D",
+            "Dof": "oz",
+            "ElementGroup": "internal",
+            "Deformed": false,
+            "DeformedScale": 1e2,
+            "Frequency": "step",
+            "ShowMesh": false
+        },
+        "T":{
+            "Type": "Surf_2D",
+            "Dof": "T",
+            "ElementGroup": "internal",
+            "Deformed": false,
+            "DeformedScale": 0.0,
+            "Frequency": "step",
+            "ShowMesh": false
+        },
+        "poros":{
+            "Type": "Surf_2D",
+            "Dof": "poros",
+            "ElementGroup": "internal",
+            "Deformed": false,
+            "DeformedScale": 0.0,
+            "Frequency": "step",
+            "ShowMesh": false
+        },
+        "PhaseField":{
+            "Type": "Surf_2D",
+            "Dof": "phase",
+            "ElementGroup": "internal",
+            "Deformed": false,
+            "Frequency": "step",
+            "ShowMesh": false
+        },
+        "plot2":{
+            "Type": "Plot_XY",
+            "x": "time",
+            "y": ["PhaseField1/L_crack"],
+            "Frequency": "step",
+            "xlim": "0+"
+        },
+        "plot3":{
+            "Type": "Plot_XY",
+            "x": "tstep",
+            "y": ["dt"],
+            "Frequency": "step",
+            "xlim": "0+",
+            "ylim": "log"
+        }
+    },
+    "Outputs":{
+        "OutputMeshOnlyOnce": true,
+        "SaveFolder":"Results",
+        "ElementGroups": ["internal"],
+        "internal":{
+            "Nodes": ["ux","uy","oz","phase","T"],
+            "IP":["s1","s2","s3","dam"]
+        }
+    },
+    "Models":{
+        "Names":["PhaseField1","Thermal","Porosity","Boundary1","Boundary2b","Boundary3"],
+        "PhaseField1":{
+            "Name": "Fracture/CossPhaseField",
+            "ElementGroup_u": "internal",
+            "ElementGroup_phase": "internal",
+            "ElementGroup_T": "internal",
+            "ElementGroup_poros": "internal",
+            "Material": "Ice",
+            "ViscousStab": 0.0e1,
+            "Irreversible": "AugmentedLagrangeMult",
+            "Intertia": true,
+            "Gravity": true,
+            "ViscousHeating": true
+        },
+        "Thermal":{
+            "Name": "Thermal/ThermalModel",
+            "ElementGroup_T": "internal",
+            "Material": "Ice"
+        },
+        "Porosity":{
+            "Name": "PoroElasticity/VariablePorosity",
+            "ElementGroup_T": "internal",
+            "ElementGroup_poros": "internal",
+            "Material": "Ice",
+            "Fluid": "Water",
+            "PhaseChange": false
+        },
+        "Boundary1":{
+            "Name": "Constraints",
+            "NodeGroup":"left",
+            "dofs": ["ux","oz"],
+            "values": [0.0, 0.0]
+        },
+        "Boundary2":{
+            "Name": "BasalFriction",
+            "ElementGroup_u":"bottom",
+            "ElementGroup_phase":"bottom",
+            "friction": 1.0e4,
+            "k": 1.0e12,
+            "u0": 1.0e-4,
+            "Lumped": true
+        },
+        "Boundary2b":{
+            "Name": "Constraints",
+            "NodeGroup":"bottom",
+            "dofs": ["ux", "uy"],
+            "values": [0.0, 0.0]
+        },
+        "Boundary3":{
+            "Name": "WeakExternal",
+            "ElementGroup":"right",
+            "k": 1.0e12,
+            "dofs": ["ux"],
+            "values": [0.0],
+            "UpperTime": 0.0,
+            "Lumped": true
+        }
+    }
+}

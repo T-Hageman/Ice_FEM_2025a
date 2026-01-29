@@ -1,0 +1,9 @@
+includedir=/rds/general/user/thageman/home/Codes/Libraries/PETSC/linux-gnu-opt/externalpackages/hdf5-1.12.1/src
+libdir=/rds/general/user/thageman/home/Codes/Libraries/PETSC/linux-gnu-opt/lib
+
+Name: HighFive
+Description: A fast JSON parser/generator for C++ with both SAX/DOM style API
+Version: 1.0.0
+URL: https://github.com/Tencent/rapidjson
+Libs: -L${libdir} -lhdf5_hl -lhdf5 -lstdc++fs
+Cflags: -I${includedir}

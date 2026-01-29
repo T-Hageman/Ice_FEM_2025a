@@ -1,0 +1,217 @@
+{
+    "Restart":{
+        "Restartable": false,
+        "Saveloc": "Results/Backup",
+        "SaveFrequency": 100,
+        "BackUps": 3
+    },
+    "Logs":{
+        "InfoLevel": 2
+    },
+    "mesh":{
+        "dim":2,
+        "file":"TestCases/TriAxialCompression/Meshgen2D/Plate2D_p2_0.0005m_56c.h5",
+        "ipcount1D": 3
+    },
+    "properties":{
+        "PhaseField":{
+            "DamFunction": "Quadratic",
+            "DensityDamage": "Step2",
+            "GravityDamage": "Step2",
+            "ViscoDriving": "None",
+            "ViscoDrivingFactor": 0.0,
+            "ConsistentEnergy": false,
+            "ConsistentDegradation": false,
+            "DistributionFunction": "HO_Linear2",
+            "k0": 1.0e-12
+        },
+        "Ice":{
+            "TemperatureDependent":{
+                "TemperatureDependent": true,
+                "TRef": 273.15,
+                "TOffset": 273.15,
+                "QCreep": 150.0e3,
+                "_ft0": 0.2e6,
+                "ft0": 0.2e6,
+                "ftdeg":4.0e4,
+                "sydeg": 0.5e6
+            },
+            "SolidProperties":{
+                "Rheology": "DamViscoElasticPlastic",
+                "Density": 910,
+                "Young": 5.0e9,
+                "Poisson": 0.35,
+                "G_coss": 1.8e9,
+                "l_coss": 2.5e-3,
+                "Damping": 1.0e6,
+                "A": 1.0e-24,
+                "PhiViscLim": 0.2,
+                "n": 3.0,
+                "sy": 9.5e6,
+                "hardening": -0.9,
+                "hard_eRef": 2.0e-4,
+                "pl_visc": 1.0e3
+            },
+            "FractureProperties":{
+                "Split": "SpecStress",
+                "l": 1.5e-3,
+                "Gc": 4000.0e-3,
+                "Viscosity": 1.0e-1
+            },
+            "ThermalProperties":{
+                "ThermalConductivity": 2.0,
+                "HeatCapacity": 2.1e3
+            }
+        },
+        "TimeDiscretisation":{
+            "Scheme": "BDF2",
+            "_Scheme": "Newmark",
+            "beta": 0.4,
+            "gamma": 0.75 
+        }
+    },
+    "Dofs":{
+        "DofNames": ["ux","uy", "oz","phase","lMult_pf","lMult_pf2","T"],
+        "DofStep":  [0,   0,    0,    1,      1,  1,  2]
+    },
+    "nonlinSolver":{
+        "BFGS": [false, false, false],
+        "BFGS_Reset": 20,
+        "max_it": 40,
+        "max_outer_it": 1,
+        "convCrit": [1.0e-5, 1.0e10, 1.0e-5],
+        "tiny": [1.0e-5, 1.0e10, 1.0e-8],
+        "linesearch": true,
+        "linesearchLims": [0.1, 1.0],
+        "LinSolver":{
+            "Type": "GMRES",
+            "IOptionIdx": [],
+            "IOptionVals": []
+        },
+        "Initialization":{
+            "Type": "Defect",
+            "InteriorGroup": "internal",
+            "Material": "Ice",
+            "Z":100e-3,
+            "Y":50e-3,
+            "R":1.0,
+            "T0": -11.0
+        }
+    },
+    "TimeSolver":{
+        "dtSteps": [1.0, 0.025],
+        "tSteps": [-100, 0],
+        "DynamicDT": true,
+        "TimeDataRefine": "PhaseField1/dL_crack",
+        "TimeDataRefineFactor": 5e-3,
+        "ScaleMin":1e-4,
+        "t0": -10.0,
+        "tmax": 60.0,
+        "outputN": 10
+    },
+    "Visualisation":{
+        "Plots": ["uy","T","PhaseField","plot","plot2","plot3"],
+        "ElementGroup_u": "internal",
+        "uy":{
+            "Type": "Surf_2D",
+            "Dof": "uy",
+            "ElementGroup": "internal",
+            "Deformed": true,
+            "DeformedScale": 1e1,
+            "Frequency": "step",
+            "ShowMesh": false
+        },
+        "T":{
+            "Type": "Surf_2D",
+            "Dof": "T",
+            "ElementGroup": "internal",
+            "Deformed": false,
+            "DeformedScale": 0.0,
+            "Frequency": "step",
+            "ShowMesh": false
+        },
+        "PhaseField":{
+            "Type": "Surf_2D",
+            "Dof": "phase",
+            "ElementGroup": "internal",
+            "Deformed": false,
+            "Frequency": "step",
+            "ShowMesh": false
+        },
+        "plot":{
+            "Type": "Plot_XY",
+            "x": "Tri/U_Ext",
+            "y": ["Tri/p_Ext"],
+            "Frequency": "step"
+        },
+        "plot2":{
+            "Type": "Plot_XY",
+            "x": "time",
+            "y": ["PhaseField1/L_crack"],
+            "Frequency": "step",
+            "xlim": "0+"
+        },
+        "plot3":{
+            "Type": "Plot_XY",
+            "x": "tstep",
+            "y": ["dt"],
+            "Frequency": "step",
+            "xlim": "0+",
+            "ylim": "log"
+        }
+    },
+    "Outputs":{
+        "OutputMeshOnlyOnce": true,
+        "SaveFolder":"Results",
+        "ElementGroups": ["internal"],
+        "internal":{
+            "Nodes": ["ux","uy","oz","phase","T"],
+            "IP":["s1","s2","s3","dam"]
+        }
+    },
+    "Models":{
+        "Names":["PhaseField1","Thermal","Boundary1","Boundary2","Tri"],
+        "PhaseField1":{
+            "Name": "Fracture/CossPhaseField",
+            "ElementGroup_u": "internal",
+            "ElementGroup_phase": "internal",
+            "ElementGroup_T": "internal",
+            "Material": "Ice",
+            "ViscousStab": 0.0e1,
+            "Irreversible": "AugmentedLagrangeMult",
+            "Intertia": true,
+            "Gravity": false,
+            "LumpedPFCapacity": false,
+            "LumpedDriving": false,
+            "ViscousHeating": true
+        },
+        "Thermal":{
+            "Name": "Thermal/ThermalModel",
+            "ElementGroup_T": "internal",
+            "Material": "Ice"
+        },
+        "Boundary2":{
+            "Name": "Constraints",
+            "NodeGroup":"bottom",
+            "dofs": ["ux","uy","oz"],
+            "values": [0.0, 0.0, 0.0]
+        },
+        "Boundary1":{
+            "Name": "Constraints",
+            "NodeGroup":"top",
+            "dofs": ["ux","oz"],
+            "values": [0.0,0.0]
+        },
+        "Tri":{
+            "Name": "TriAxial",
+            "SideGroup":"sides",
+            "TopGroup":"top",
+            "p0": 0.0e6,
+            "dU": -1e-4,
+            "DamagedForces": true,
+            "dummy": 1.0e14,
+            "Material": "Ice",
+            "t_postFail": 5e-1
+        }
+    }
+}

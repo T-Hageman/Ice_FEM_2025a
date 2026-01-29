@@ -1,0 +1,188 @@
+{ 
+    "Restart":{
+        "Restartable": false,
+        "Saveloc": "Results/Backup",
+        "SaveFrequency": 1,
+        "BackUps": 3
+    },
+    "Logs":{
+        "InfoLevel": 2
+    },
+    "mesh":{
+        "dim":2,
+        "file":"TestCases/DamageChallenge/MeshGeneration/quadratic_0125mm.h5",
+        "ipcount1D": 3
+    },
+    "properties":{
+        "PhaseField":{
+            "_Comment": "Properties for fracture phase-field: length scale l [m], interfacial energy Gc [J/m^2]",
+            "DamFunction": "Quadratic",
+            "DensityDamage": "None",
+            "GravityDamage": "None",
+            "Split": "SpecStrains",
+            "ConsistentEnergy": true,
+            "DistributionFunction": "HO_Linear",
+            "l": 0.5e-3,
+            "k0": 1.0e-6,
+            "Viscosity": 0.0
+        },
+        "Solid":{
+            "_Comment": "Properties describing the metal: intact material density Density [kg/m^3]",
+            "Density": 2500.0,
+            "Young": 0.6e9,
+            "Poisson": 0.2,
+            "Gc": 130.0,
+            "Rheology":{
+                "Type": "LinearElastic"
+            }
+        },
+        "TimeDiscretisation":{
+            "Scheme": "Newmark",
+            "beta": 0.5625,
+            "gamma": 1.0 
+        }
+    },
+    "Dofs":{
+        "DofNames": ["ux","uy","phase","lMult_pf"],
+        "DofStep":  [0,   0,   0,      0]
+    },
+    "nonlinSolver":{ 
+        "max_it": 100,
+        "max_outer_it": 1,
+        "convCrit": [1.0e-9, 1.0e10, 1.0e-9],
+        "tiny": [1.0e-6, 1.0e10, 1.0e-6],
+        "linesearch": false,
+        "linesearchLims": [0.25, 1],
+        "LinSolver":{
+            "_Comment": "MUMPS options: https://graal.ens-lyon.fr/MUMPS/doc/userguide_5.5.1.pdf",
+            "_Type": "MUMPS",
+            "_IOptionIdx": [14],
+            "_IOptionVals": [5000],
+            "_Comment2": "PARDISO options: https://pardiso-project.org/manual/manual.pdf  https://www.intel.com/content/www/us/en/develop/documentation/onemkl-developer-reference-c/top/sparse-solver-routines/onemkl-pardiso-parallel-direct-sparse-solver-iface/pardiso-iparm-parameter.html",
+            "Type": "Pardiso",
+            "IOptionIdx": [],
+            "IOptionVals": []
+        },
+        "Initialization":{
+            "Type": "DamageChallenge",
+            "InteriorGroup": "internal",
+            "NotchWidth": 1.0e-3,
+            "Notch_x": 38.1e-3,
+            "notch_y": 5.08e-3
+        }
+    },
+    "TimeSolver":{
+        "t0": 0,
+        "dt0": 0.5e-5,
+        "dt": 0.5e-5,
+        "tmax": 1.0e-3,
+        "outputN": 1
+    },
+    "Visualisation":{
+        "Plots": ["ux","uy","PhaseField","plot"],
+        "ElementGroup_u": "internal",
+        "ux":{
+            "Type": "Surf_2D",
+            "Dof": "ux",
+            "ElementGroup": "internal",
+            "Deformed": true,
+            "DeformedScale": 100.0,
+            "Frequency": "it"
+        },
+        "uy":{
+            "Type": "Surf_2D",
+            "Dof": "uy",
+            "ElementGroup": "internal",
+            "Deformed": true,
+            "DeformedScale": 100.0,
+            "Frequency": "it"
+        },
+        "PhaseField":{
+            "Type": "Surf_2D",
+            "Dof": "phase",
+            "ElementGroup": "internal",
+            "Deformed": false,
+            "Frequency": "it"
+        },
+        "plot":{
+            "Type": "Plot_XY",
+            "x": "time",
+            "y": ["Boundary3/F_ux","Boundary3/F_uy"],
+            "Frequency": "step",
+            "xlim": "0+"
+        }
+    },
+    "Outputs":{
+        "OutputMeshOnlyOnce": true,
+        "SaveFolder":"Results",
+        "ElementGroups": ["internal"],
+        "internal":{
+            "Nodes": ["ux","uy","phase"],
+            "_IP": ["phi_hist"],
+            "IP": ["sxx","syy","szz","sxy","exx","eyy","ezz","exy"]
+        }
+    },
+    "Models":{
+        "Names":["PhaseField1","Boundary1","Boundary2","Boundary3","Boundary4","Boundary5","Boundary6"],
+        "PhaseField1":{
+            "_Comment": "PhaseField damage model",
+            "Name": "Fracture/PhaseField",
+            "ElementGroup_u": "internal",
+            "ElementGroup_phase": "internal",
+            "Material": "Solid",
+            "ViscousStab": 0.0,
+            "_Irreversible": "Penalty",
+            "__Irreversible": "Hist",
+            "Irreversible": "AugmentedLagrangeMult",
+            "Intertia": false
+        },
+        "Boundary1":{
+            "Name": "WeakArea",
+            "ElementGroup":"bottom",
+            "dofs": ["uy"],
+            "values": [0.0],
+            "dvalues": [0.0],
+            "xmin": 7.495e-3,
+            "xmax": 7.745e-3,
+            "k": 1.0e12
+        },
+        "Boundary2":{
+            "Name": "WeakArea",
+            "ElementGroup":"bottom",
+            "dofs": ["uy"],
+            "values": [0.0],
+            "dvalues": [0.0],
+            "xmin": 68.455e-3,
+            "xmax": 68.7050e-3,
+            "k": 1.0e12
+        },
+        "Boundary3":{
+            "Name": "WeakArea",
+            "ElementGroup":"top",
+            "dofs": ["ux","uy"],
+            "values": [0.0,0.0],
+            "dvalues": [0.0,-1.0],
+            "xmin": 37.85e-3,
+            "xmax": 38.35e-3,
+            "k": 1.0e12
+        },
+        "Boundary4":{
+            "Name": "Constraints",
+            "NodeGroup":"left",
+            "dofs": ["phase"],
+            "values": [0.0]
+        },
+        "Boundary5":{
+            "Name": "Constraints",
+            "NodeGroup":"right",
+            "dofs": ["phase"],
+            "values": [0.0]
+        },
+        "Boundary6":{
+            "Name": "Constraints",
+            "NodeGroup":"top",
+            "dofs": ["phase"],
+            "values": [0.0]
+        }
+    }
+}
