@@ -6,7 +6,7 @@ addpath(genpath('../PostProcessingReqs'))
 
 dn = 10;
 
-fldr = "../../Results_1m/";
+fldr = "../../Results/";
 Animations = true;
 AnimationsIP = true;
 defscale = 100;
@@ -46,7 +46,7 @@ defscale = 100;
 
 	if (Animations)
 		DataNamesNodes = {"ux","uy","oz","phase","T"};
-		GroupName = "/"+{"2_internal","2_internal","2_internal","2_internal","2_internal","2_internal"}+"/";
+		GroupName = "/"+{"internal","internal","internal","internal","internal"}+"/";
 
 		% load mesh
 		XMesh = h5read(meshFile,GroupName{1}+"X"); %#ok<*UNRCH>
@@ -95,6 +95,7 @@ defscale = 100;
 		end
 		
 		for i=1:length(DataNamesNodes)
+			saveFigNow(fg{i}, DataNamesNodes{i}, 8, true, false, 0)
 			close(vidfile{i});
 			close(fg{i});
 		end
@@ -103,7 +104,7 @@ defscale = 100;
 
 	if AnimationsIP
 		DataNamesIP = {"s1","s2","s3","dam"};
-		GroupName = "/"+{"2_internal","2_internal","2_internal","2_internal"}+"/";
+		GroupName = "/"+{"internal","internal","internal","internal"}+"/";
 
 		% load mesh
 		XIPMesh = h5read(meshFile,GroupName{1}+"Xip"); %#ok<*UNRCH>
@@ -161,6 +162,7 @@ defscale = 100;
 			frame = getframe(gcf);
 			writeVideo(vidfile{1}, frame);
 		end
+		saveFigNow(fg{1}, "Stresses", 16, true, false, 0)
 		close(vidfile{1});
 		close(fg{1});
 

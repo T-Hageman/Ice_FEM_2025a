@@ -10,7 +10,7 @@
     },
     "mesh":{
         "dim":2,
-        "file":"TestCases/IceCliffs/MeshGen/IceCliff_L1000m_H200m_dx1m_56c.h5",
+        "file":"TestCases/IceCliffs/MeshGen/IceCliff_L1000m_H200m_dx2m_56c.h5",
         "ipcount1D": 3
     },
     "properties":{

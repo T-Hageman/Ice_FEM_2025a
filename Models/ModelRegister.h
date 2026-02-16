@@ -21,7 +21,7 @@
 #include "Fracture/PhaseField/PhaseField.h"
 // #include "PoroElasticity/PoroElasticFlow.h"
 // #include "PoroElasticity/ThermalPorous.h"
-// #include "PoroElasticity/VariablePorosity.h"
+#include "PoroElasticity/VariablePorosity.h"
 // #include "PoroElasticity/SurfaceFlow.h"
 // #include "PoroElasticity/FractureFlow.h"
 // #include "PoroElasticity/SurfaceFlux.h"

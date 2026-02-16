@@ -40,7 +40,7 @@ void RegisterModels(){
     //poroelasticity
     // Register_PoroElasticFlow();
     // Register_ThermalPorous();
-    // Register_VariablePorosity();
+    Register_VariablePorosity();
     // Register_SurfaceFlow();
     // Register_FractureFlow();
     // Register_SurfaceFlux();
