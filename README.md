@@ -2,6 +2,10 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+Note: This repository serves to preserve the version of code related to the publication: 
+> T. Hageman, *Phase-field fracture modelling of ice: From triaxial tests to ice-cliff collapse*, Computer Methods in Applied Mechanics and Engineering, 2026. https://doi.org/10.1016/j.cma.2026.118857
+
+
 ## Overview
 
 IceFEM is a parallel finite element code designed for high-fidelity simulation of ice mechanics, including:
